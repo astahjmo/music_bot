@@ -1,16 +1,15 @@
 const { createAudioPlayer, createAudioResource , StreamType, demuxProbe, joinVoiceChannel, NoSubscriberBehavior, AudioPlayerStatus, VoiceConnectionStatus, getVoiceConnection } = require('@discordjs/voice')
 const play = require('play-dl')
 
-function getStream(){
-    return new Promise((resolve, reject) => {
-        let stream = play.stream(process.env['link'])
-        resolve(stream)
-    })}
+async function getStream(){
+        let stream = await play.stream(process.env['link'])
+        return stream
+}
 
 
 
-function playStream(connection){
-    getStream().then(stream => {
+async function playStream(connection){
+    await getStream().then(async stream => {
         let resource = createAudioResource(stream.stream, {
             inputType: stream.type
         })
@@ -28,9 +27,16 @@ function playStream(connection){
         stream.stream.on('status' , (status) => {
             console.log(status)
         })
+
+        stream.stream.on('error' , (err) => {
+            console.log(err)
+        })
+
+        player.on('error' , (err) => {
+            console.log(err)
+        })
     })
 }
-
 module.exports = {
     playStream
 }

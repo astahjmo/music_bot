@@ -16,17 +16,17 @@ require('dotenv').config()
 require('./server')
 
 client.on('ready', () => {
-  client.guilds.fetch('829496232756903988').then((guild) => {
+  client.guilds.fetch('829496232756903988').then(async (guild) => {
       const channel = guild.channels.cache.get('932668851127189546')
       channel.send('> Bot ativado e pronto para tocar!')
-      adapter = connection(guild)
+      adapter = await connection(guild)
       console.log("Criando stream")
       try {        
-        const voiceChannel = guild.channels.cache.get(
+        const voiceChannel = await guild.channels.cache.get(
         adapter.joinConfig.channelId
         )
         voiceChannel.guild.me.voice.setSuppressed(false)
-        player.playStream(adapter)     
+        await player.playStream(adapter) 
       }
       catch(err) {
         console.log(`Erro ao criar stream ${err}`)
@@ -35,14 +35,14 @@ client.on('ready', () => {
   })
 })
 
-function connection(guild) {
+async function connection(guild) {
   const connection = joinVoiceChannel({
       channelId: process.env['channelId'],
       guildId: guild.id,
       adapterCreator: guild.voiceAdapterCreator,
       selfMute: false,
   })
-  return connection
+  return await connection
 }
 
 client.login(process.env['token'])
