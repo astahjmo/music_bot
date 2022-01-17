@@ -3,7 +3,7 @@ const play = require('play-dl')
 
 function getStream(){
     return new Promise((resolve, reject) => {
-        let stream = play.stream(process.env.link)
+        let stream = play.stream(process.env['link'])
         resolve(stream)
     })}
 
